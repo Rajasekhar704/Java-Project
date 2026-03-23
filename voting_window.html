@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>College Online Voting</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1976D2, #26A69A);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .voting-container {
+      background: #ffffff;
+      width: 350px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      border: 2px solid #1976D2;
+    }
+
+    .voting-header {
+      background-color: #1976D2;
+      color: #fff;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 5px;
+      margin: -20px -20px 20px -20px;
+    }
+
+    h3 {
+      text-align: center;
+      margin-top: 0;
+      color: #333;
+    }
+
+    label.title {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 8px;
+    }
+
+    .candidate-list {
+      margin-left: 15px;
+      margin-bottom: 20px;
+    }
+
+    .candidate-list label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      background-color: #1976D2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      width: 100%;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: #0D47A1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="voting-container">
+    <div class="voting-header">College Online Voting</div>
+
+    <h3>CR Election - AIML 2nd Year</h3>
+
+    <label class="title">Select Your Candidate:</label>
+    <div class="candidate-list">
+      <label><input type="radio" name="candidate" value="Rajasekhar" checked /> Rajasekhar</label>
+      <label><input type="radio" name="candidate" value="Rishi" /> Rishi</label>
+      <label><input type="radio" name="candidate" value="Tharn" /> Tharn</label>
+      <label><input type="radio" name="candidate" value="Kamal" /> Kamal</label>
+    </div>
+
+    <button class="submit-btn" onclick="submitVote()">Submit Vote</button>
+  </div>
+
+  <script>
+    function submitVote() {
+      const selected = document.querySelector('input[name="candidate"]:checked');
+      if (selected) {
+        alert(`Vote Submitted Successfully!\nYou voted for: ${selected.value}`);
+      } else {
+        alert("Please select a candidate before submitting your vote.");
+      }
+    }
+  </script>
+</body>
+</html>
