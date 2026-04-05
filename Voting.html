@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Online Voting System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        :root { 
+            --sidebar-color: #0A1128; 
+            --main-bg: #f4f6f9; 
+            --blue: #0b5ed7; 
+            --green: #2e7d32; 
+            --orange: #f57c00; 
+            --purple: #8e24aa; 
+        }
+        html { scroll-behavior: smooth; }
+        body { height: 100vh; overflow: hidden; background-color: var(--main-bg); }
+        .hidden { display: none !important; }
+
+        /* ================= PAGE 1: LOGIN ================= */
+        .login-wrapper { 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            background: linear-gradient(135deg, #4A148C 0%, #1565C0 100%); 
+        }
+        .header { margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; color: white; }
+        .logo-container { width: 60px; height: 60px; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .logo-container i { font-size: 28px; }
+        .header h1 { font-size: 24px; font-weight: 700; text-transform: uppercase; text-align: center; letter-spacing: 1px;}
+        
+        .login-card { background: white; width: 420px; border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); }
+        .welcome-text { text-align: center; font-size: 20px; font-weight: 600; color: #222; }
+        .sub-text { text-align: center; font-size: 13px; color: #666; margin-bottom: 20px; }
+        
+        .role-switcher { display: flex; gap: 15px; margin-bottom: 20px; }
+        .role-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .role-btn.admin { background-color: var(--blue); color: white; }
+        .role-btn.student { background-color: #E8F5E9; color: #2E7D32; }
+        
+        .login-title { font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: #333; margin-bottom: 5px; }
+        .input-container { position: relative; display: flex; align-items: center; }
+        .input-container i { position: absolute; left: 15px; color: #aaa; font-size: 14px; }
+        .input-container input { width: 100%; padding: 12px 15px 12px 40px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .input-container select { width: 100%; padding: 12px 15px 12px 40px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: white; }
+        
+        .remember-forgot { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 20px; }
+        .remember-forgot label { display: flex; align-items: center; gap: 5px; cursor: pointer; color: #555; }
+        .remember-forgot a { color: var(--blue); text-decoration: none; font-weight: 500; }
+        
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-login { background-color: var(--blue); color: white; margin-bottom: 10px; }
+        .btn-exit { background-color: #E2E8F0; color: #333; }
+        
+        .footer-credits { position: absolute; bottom: 20px; color: rgba(255,255,255,0.7); font-size: 12px; }
+
+        /* ================= PAGE 2: ADMIN DASHBOARD ================= */
+        .dashboard-wrapper { display: flex; height: 100vh; width: 100vw; }
+        
+        .sidebar { width: 240px; background-color: var(--sidebar-color); color: #a0aec0; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0; }
+        .sidebar-brand { display: flex; align-items: center; gap: 10px; color: white; padding: 0 20px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-menu { list-style: none; margin-top: 20px; flex-grow: 1; }
+        .sidebar-menu li a { display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #a0aec0; text-decoration: none; font-size: 14px; cursor: pointer; }
+        .sidebar-menu li.active a, .sidebar-menu li a:hover { color: white; background-color: rgba(255,255,255,0.05); border-left: 4px solid var(--blue); }
+        .sidebar-logout a { display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #ff6b6b; text-decoration: none; font-size: 14px; cursor: pointer; }
+
+        .main-container { flex-grow: 1; display: flex; flex-direction: column; background-color: #F8FAFC; overflow-y: auto; }
+        
+        .top-nav { background-color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; }
+        .nav-left h2 { font-size: 18px; font-weight: 600; color: #1e293b; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .search-bar { position: relative; }
+        .search-bar input { padding: 8px 15px 8px 35px; border: 1px solid #E2E8F0; border-radius: 20px; font-size: 13px; width: 200px; }
+        .search-bar i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; }
+        .user-profile { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: #333; }
+        .user-profile i { font-size: 28px; color: var(--blue); }
+
+        .content-grid { padding: 30px; display: grid; grid-template-columns: 3fr 1fr; gap: 20px; }
+        .full-content { padding: 30px; display: flex; flex-direction: column; gap: 20px; }
+
+        .stats-row { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0; position: relative; }
+        .stat-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 15px; }
+        
+        .stat-card.blue .stat-icon { background-color: #E3F2FD; color: #1E88E5; }
+        .stat-card.green .stat-icon { background-color: #E8F5E9; color: #43A047; }
+        .stat-card.orange .stat-icon { background-color: #FFF3E0; color: #FB8C00; }
+        .stat-card.purple .stat-icon { background-color: #F3E5F5; color: #8E24AA; }
+        
+        .stat-info p { font-size: 13px; color: #64748b; font-weight: 500; }
+        .stat-info h3 { font-size: 24px; color: #1e293b; font-weight: 700; }
+        .stat-card .view-all { position: absolute; bottom: 15px; right: 20px; font-size: 12px; color: var(--blue); text-decoration: none; }
+
+        .box { background: white; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0; }
+        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .box-header h3 { font-size: 15px; color: #1e293b; font-weight: 600; }
+        .view-all-btn { padding: 5px 12px; border: 1px solid #E2E8F0; border-radius: 15px; font-size: 12px; color: var(--blue); background: none; cursor: pointer; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        table th, table td { padding: 12px 15px; border-bottom: 1px solid #E2E8F0; text-align: left; }
+        table th { color: #64748b; font-weight: 600; background-color: #F8FAFC; }
+        
+        .status-badge { padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+        .status-badge.active { background-color: #E8F5E9; color: #2E7D32; }
+        .status-badge.upcoming { background-color: #FFF3E0; color: #E65100; }
+        .status-badge.completed { background-color: #E3F2FD; color: #1565C0; }
+
+        .action-btn-red { background-color: #FFEBEE; color: #C62828; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; }
+
+        .quick-actions { display: flex; flex-direction: column; gap: 10px; }
+        .action-card-btn { width: 100%; padding: 12px; border-radius: 8px; color: white; border: none; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        
+        .system-overview { grid-column: 1 / -1; display: flex; justify-content: space-between; background: white; padding: 15px 20px; border-radius: 12px; border: 1px solid #E2E8F0; font-size: 12px; color: #64748b; }
+        .status-dot { width: 8px; height: 8px; background-color: #10B981; border-radius: 50%; display: inline-block; }
+
+        /* ================= PAGE 3: STUDENT VOTING PORTAL ================= */
+        .student-portal { display: flex; flex-direction: column; height: 100vh; background-color: #f0f2f5; }
+        .student-nav { background-color: #0A1128; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .student-nav h2 { font-size: 18px; }
+        .student-content { flex-grow: 1; padding: 30px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; align-items: center; }
+        
+        .election-card { background: white; border-radius: 12px; padding: 25px; border: 1px solid #ddd; width: 550px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .election-card h4 { color: #0A1128; margin-bottom: 5px; font-size: 18px; text-align: center;}
+        .election-card p.subtitle { color: #64748b; font-size: 13px; text-align: center; margin-bottom: 20px; }
+        
+        .candidate-row { display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-top: 10px; border: 1px solid #e9ecef; cursor: pointer; transition: 0.2s; }
+        .candidate-row:hover { background: #f1f3f5; border-color: #ced4da; }
+        .candidate-row input[type="radio"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; }
+        .candidate-row span { font-size: 15px; font-weight: 600; color: #333; }
+        
+        .submit-vote-btn { width: 100%; margin-top: 20px; background-color: var(--green); color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .submit-vote-btn:hover { background-color: #1b5e20; }
+
+        .winner-box { background: #E8F5E9; border: 1px solid #81C784; padding: 15px; border-radius: 8px; color: #1b5e20; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .candidate-progress-bar { width: 100%; background: #e2e8f0; border-radius: 10px; height: 10px; margin-top: 5px; }
+        .candidate-progress-fill { height: 10px; border-radius: 10px; background-color: var(--blue); }
+
+        /* ================= MODAL STYLES ================= */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-box { background: white; width: 450px; border-radius: 12px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h3 { font-size: 18px; color: #1e293b; }
+        .modal-header .close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #64748b; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .modal-footer button { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+        .modal-footer .btn-cancel { background: #E2E8F0; color: #333; }
+        .modal-footer .btn-save { background: var(--blue); color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper" id="loginPage">
+        <div class="header">
+            <div class="logo-container"><i class="fa-solid fa-graduation-cap"></i></div>
+            <h1>College Online Voting System</h1>
+        </div>
+        <div class="login-card">
+            <div class="welcome-text">Welcome! Please Login</div>
+            <div class="sub-text">Choose your role to continue</div>
+            
+            <div class="role-switcher">
+                <button class="role-btn admin" id="adminBtn"><i class="fa-solid fa-shield-halved"></i> Admin / Staff</button>
+                <button class="role-btn student" id="studentBtn"><i class="fa-solid fa-user"></i> Student</button>
+            </div>
+            
+            <div class="login-title" id="loginTitleText">Admin / Staff Login</div>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="username" placeholder="Enter your full name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" placeholder="Enter any password" required>
+                    </div>
+                </div>
+                
+                <div class="remember-forgot">
+                    <label><input type="checkbox"> Remember me</label>
+                    <a href="#">Forgot Password?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-login"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</button>
+                <button type="button" class="btn btn-exit" onclick="handleExit()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Exit</button>
+            </form>
+        </div>
+        <div class="footer-credits">© 2026 College Online Voting System. All rights reserved.</div>
+    </div>
+
+    <div class="dashboard-wrapper hidden" id="dashboardPage">
+        <div class="sidebar">
+            <div>
+                <div class="sidebar-brand"><i class="fa-solid fa-bars fa-lg"></i><h3>College Voting</h3></div>
+                <ul class="sidebar-menu">
+                    <li id="menu-dash" class="active" onclick="switchModule('dash')"><a><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                    <li id="menu-elections" onclick="switchModule('elections')"><a><i class="fa-solid fa-check-to-slot"></i> Elections</a></li>
+                    <li id="menu-candidates" onclick="switchModule('candidates')"><a><i class="fa-solid fa-user-group"></i> Candidates</a></li>
+                    <li id="menu-voters" onclick="switchModule('voters')"><a><i class="fa-solid fa-id-card"></i> Voters</a></li>
+                    <li id="menu-results" onclick="switchModule('results')"><a><i class="fa-solid fa-square-poll-vertical"></i> Results</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-logout"><a onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></div>
+        </div>
+
+        <div class="main-container">
+            <div class="top-nav">
+                <div class="nav-left"><h2 id="moduleTitle">Admin Dashboard</h2></div>
+                <div class="nav-right">
+                    <div class="search-bar"><i class="fa-solid fa-search"></i><input type="text" placeholder="Search..."></div>
+                    <div class="user-profile"><i class="fa-solid fa-circle-user"></i> <span>Admin</span></div>
+                </div>
+            </div>
+
+            <div id="module-dash-content" class="content-grid">
+                <div class="stats-row">
+                    <div class="stat-card blue"><div class="stat-icon"><i class="fa-solid fa-box-archive"></i></div><div class="stat-info"><p>Active Elections</p><h3 id="statActive">2</h3></div><a href="#" class="view-all" onclick="switchModule('elections')">View All</a></div>
+                    <div class="stat-card green"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-info"><p>Total Voters</p><h3 id="statVoters">1,245</h3></div><a href="#" class="view-all" onclick="switchModule('voters')">View All</a></div>
+                    <div class="stat-card orange"><div class="stat-icon"><i class="fa-solid fa-user-tie"></i></div><div class="stat-info"><p>Total Candidates</p><h3 id="statCandidates">18</h3></div><a href="#" class="view-all" onclick="switchModule('candidates')">View All</a></div>
+                    <div class="stat-card purple"><div class="stat-icon"><i class="fa-solid fa-check-double"></i></div><div class="stat-info"><p>Votes Cast</p><h3 id="statVotes">856</h3></div><a href="#" class="view-all" onclick="switchModule('results')">View All</a></div>
+                </div>
+                
+                <div class="box">
+                    <div class="box-header"><h3>Recent Elections</h3><button class="view-all-btn" onclick="switchModule('elections')">View All</button></div>
+                    <table><thead><tr><th>Election Name</th><th>Status</th><th>Start Date</th><th>End Date</th></tr></thead><tbody id="dashTableBody"></tbody></table>
+                </div>
+
+                <div class="box">
+                    <div class="box-header"><h3>Quick Actions</h3></div>
+                    <div class="quick-actions">
+                        <button class="action-card-btn" style="background-color:var(--blue);" onclick="openModal('election')"><i class="fa-solid fa-plus"></i> Create Election</button>
+                        <button class="action-card-btn" style="background-color:var(--green);" onclick="openModal('candidate')"><i class="fa-solid fa-user-plus"></i> Add Candidate</button>
+                        <button class="action-card-btn" style="background-color:var(--purple);" onclick="openModal('vote')"><i class="fa-solid fa-check-to-slot"></i> To Vote</button>
+                        <button class="action-card-btn" style="background-color:var(--orange);" onclick="switchModule('results')"><i class="fa-solid fa-chart-simple"></i> View Results</button>
+                    </div>
+                </div>
+
+                <div class="system-overview">
+                    <div><i class="fa-solid fa-wifi" style="color:var(--blue);"></i> Online Users: <span id="onlineUsers">12</span></div>
+                    <div><i class="fa-solid fa-envelope" style="color:var(--purple);"></i> Today's Votes: <span>156</span></div>
+                    <div><div class="status-dot"></div> System Status: <span style="color:#10B981; font-weight:600;">Online</span></div>
+                </div>
+            </div>
+
+            <div id="module-elections-content" class="full-content hidden">
+                <div class="box">
+                    <div class="box-header"><h3>Election Management</h3></div>
+                    <table><thead><tr><th>Election Name</th><th>Status (Click to toggle)</th><th>Start Date</th><th>End Date</th><th>Action</th></tr></thead><tbody id="electionsTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <div id="module-candidates-content" class="full-content hidden">
+                <div class="box">
+                    <div class="box-header"><h3>Registered Candidates</h3></div>
+                    <table><thead><tr><th>Candidate Name</th><th>Running Position</th><th>Action</th></tr></thead><tbody id="candidatesTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <div id="module-voters-content" class="full-content hidden">
+                <div class="box">
+                    <div class="box-header"><h3>Verified Student Voters</h3></div>
+                    <table><thead><tr><th>Student Name</th><th>Department</th><th>Status</th><th>Action</th></tr></thead><tbody id="votersTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <div id="module-results-content" class="full-content hidden">
+                <div class="box">
+                    <div class="box-header"><h3>Live Election Results</h3></div>
+                    <div id="resultsContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="student-portal hidden" id="studentPortalPage">
+        <div class="student-nav">
+            <h2>Student Voting Booth</h2>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <span id="welcomeStudentText">Welcome, Student!</span>
+                <button style="background-color:#ff4757; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="student-content">
+            <div id="votingBoothArea"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="electionModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Create New Election</h3>
+                <button class="close-btn" onclick="closeModal('election')">&times;</button>
+            </div>
+            <form onsubmit="handleCreateElection(event)">
+                <div class="form-group">
+                    <label>Election Name</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-file-signature"></i>
+                        <input type="text" id="newElName" placeholder="e.g., CR Election - AIML 2nd Year" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Position / Tag</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-tag"></i>
+                        <input type="text" id="newElTag" placeholder="e.g., AIML CR" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                        <input type="date" id="newElStart" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <input type="date" id="newElEnd" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal('election')">Cancel</button>
+                    <button type="submit" class="btn-save">Save Election</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="candidateModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Add New Candidate</h3>
+                <button class="close-btn" onclick="closeModal('candidate')">&times;</button>
+            </div>
+            <form onsubmit="handleCreateCandidate(event)">
+                <div class="form-group">
+                    <label>Candidate Name</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="newCandName" placeholder="Enter candidate's name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Running Position</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <select id="newCandPos" required>
+                            </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal('candidate')">Cancel</button>
+                    <button type="submit" class="btn-save">Add Candidate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="voteModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Cast Vote</h3>
+                <button class="close-btn" onclick="closeModal('vote')">&times;</button>
+            </div>
+            <form onsubmit="handleManualVote(event)">
+                <div class="form-group">
+                    <label>Select Election</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-check-to-slot"></i>
+                        <select id="voteModalElection" onchange="updateVoteModalCandidates()" required>
+                            </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Select Candidate</label>
+                    <div class="input-container">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <select id="voteModalCandidate" required>
+                            </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal('vote')">Cancel</button>
+                    <button type="submit" class="btn-save" style="background-color: var(--purple);">Cast Vote</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentRole = 'admin'; 
+        let activeModule = 'dash';
+        let loggedInStudentName = ''; 
+
+        // SEED DATA ARRAYS
+        let elections = [
+            { id: 1, name: 'CR Election - AIML 2nd Year', status: 'active', positionTag: 'AIML CR', start: '2026-05-10', end: '2026-05-15' },
+            { id: 2, name: 'Sports Committee Election', status: 'upcoming', positionTag: 'Sports Head', start: '2026-05-20', end: '2026-05-25' }
+        ];
+        
+        let candidates = [
+            { id: 1, name: 'Rajasekhar', position: 'AIML CR', votes: 120 },
+            { id: 2, name: 'Rishi', position: 'AIML CR', votes: 85 },
+            { id: 3, name: 'Kamal', position: 'Sports Head', votes: 0 }
+        ];
+        
+        let voters = [
+            { id: 1, name: 'David Miller', dept: 'CSE', status: 'verified' },
+            { id: 2, name: 'Eva Green', dept: 'AIML', status: 'verified' }
+        ];
+
+        let votesCast = 856; 
+        
+        // Anti-spam ledger for tracking votes
+        let manualVotesLog = [];
+
+        // Local Storage Syncing
+        if (localStorage.getItem('elections')) elections = JSON.parse(localStorage.getItem('elections'));
+        if (localStorage.getItem('candidates')) candidates = JSON.parse(localStorage.getItem('candidates'));
+        if (localStorage.getItem('voters')) voters = JSON.parse(localStorage.getItem('voters'));
+        if (localStorage.getItem('votesCast')) votesCast = parseInt(localStorage.getItem('votesCast'));
+        if (localStorage.getItem('manualVotesLog')) manualVotesLog = JSON.parse(localStorage.getItem('manualVotesLog'));
+
+        function syncDB() {
+            localStorage.setItem('elections', JSON.stringify(elections));
+            localStorage.setItem('candidates', JSON.stringify(candidates));
+            localStorage.setItem('voters', JSON.stringify(voters));
+            localStorage.setItem('votesCast', votesCast.toString());
+            localStorage.setItem('manualVotesLog', JSON.stringify(manualVotesLog));
+        }
+
+        const adminBtn = document.getElementById('adminBtn');
+        const studentBtn = document.getElementById('studentBtn');
+        const loginTitleText = document.getElementById('loginTitleText');
+
+        adminBtn.addEventListener('click', () => { 
+            currentRole = 'admin'; 
+            adminBtn.style.backgroundColor = 'var(--blue)'; adminBtn.style.color = 'white'; 
+            studentBtn.style.backgroundColor = '#e8f5e9'; studentBtn.style.color = '#2e7d32'; 
+            loginTitleText.innerText = "Admin / Staff Login";
+        });
+        
+        studentBtn.addEventListener('click', () => { 
+            currentRole = 'student'; 
+            studentBtn.style.backgroundColor = '#2e7d32'; studentBtn.style.color = 'white'; 
+            adminBtn.style.backgroundColor = '#e8f5e9'; adminBtn.style.color = '#2e7d32'; 
+            loginTitleText.innerText = "Student Login";
+        });
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('username').value.trim();
+            
+            if (currentRole === 'admin') {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('dashboardPage').classList.remove('hidden');
+                switchModule('dash');
+            } else {
+                const matchedVoter = voters.find(v => v.name.toLowerCase() === usernameInput.toLowerCase());
+                
+                if (!matchedVoter) {
+                    voters.push({ id: Date.now(), name: usernameInput, dept: 'AIML', status: 'verified' });
+                } else if (matchedVoter.status === 'voted') {
+                    alert("Access Denied! You have already cast your vote.");
+                    return;
+                }
+
+                loggedInStudentName = usernameInput;
+                document.getElementById('welcomeStudentText').innerText = `Welcome, ${loggedInStudentName}!`;
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('studentPortalPage').classList.remove('hidden');
+                renderStudentBooth();
+            }
+        }
+
+        function logout() {
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('studentPortalPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            loggedInStudentName = '';
+            renderAll(); 
+        }
+
+        function handleExit() { alert("Exiting application..."); }
+
+        function switchModule(modKey) {
+            document.getElementById(`menu-${activeModule}`).classList.remove('active');
+            document.getElementById(`module-${activeModule}-content`).classList.add('hidden');
+            
+            activeModule = modKey;
+            document.getElementById(`menu-${activeModule}`).classList.add('active');
+            document.getElementById(`module-${activeModule}-content`).classList.remove('hidden');
+
+            const titles = { 'dash': 'Admin Dashboard', 'elections': 'Elections Management', 'candidates': 'Registered Candidates', 'voters': 'Voters Database', 'results': 'Live Polling Metrics' };
+            document.getElementById('moduleTitle').innerText = titles[modKey];
+            
+            renderAll();
+        }
+
+        // ================= MODAL LOGIC =================
+        function openModal(type) {
+            if (type === 'election') {
+                document.getElementById('electionModal').classList.remove('hidden');
+            } else if (type === 'candidate') {
+                const selectBox = document.getElementById('newCandPos');
+                selectBox.innerHTML = '';
+                elections.forEach(el => {
+                    selectBox.innerHTML += `<option value="${el.positionTag}">${el.positionTag} (${el.name})</option>`;
+                });
+                document.getElementById('candidateModal').classList.remove('hidden');
+            } else if (type === 'vote') {
+                const selectElect = document.getElementById('voteModalElection');
+                selectElect.innerHTML = '';
+                
+                const activeElections = elections.filter(e => e.status === 'active');
+                if(activeElections.length === 0) {
+                    alert("There are no active elections currently open to cast a vote.");
+                    return;
+                }
+                
+                activeElections.forEach(el => {
+                    selectElect.innerHTML += `<option value="${el.id}">${el.name}</option>`;
+                });
+                
+                updateVoteModalCandidates();
+                document.getElementById('voteModal').classList.remove('hidden');
+            }
+        }
+
+        function updateVoteModalCandidates() {
+            const selectedElectionId = parseInt(document.getElementById('voteModalElection').value);
+            const selectedElection = elections.find(e => e.id === selectedElectionId);
+            const selectCand = document.getElementById('voteModalCandidate');
+            selectCand.innerHTML = '';
+            
+            if (selectedElection) {
+                const filteredCandidates = candidates.filter(c => c.position === selectedElection.positionTag);
+                filteredCandidates.forEach(cand => {
+                    selectCand.innerHTML += `<option value="${cand.id}">${cand.name}</option>`;
+                });
+            }
+        }
+
+        function closeModal(type) {
+            if (type === 'election') document.getElementById('electionModal').classList.add('hidden');
+            if (type === 'candidate') document.getElementById('candidateModal').classList.add('hidden');
+            if (type === 'vote') document.getElementById('voteModal').classList.add('hidden');
+        }
+
+        function handleCreateElection(event) {
+            event.preventDefault();
+            const name = document.getElementById('newElName').value;
+            const tag = document.getElementById('newElTag').value;
+            const start = document.getElementById('newElStart').value;
+            const end = document.getElementById('newElEnd').value;
+
+            const newElection = { id: Date.now(), name: name, status: 'upcoming', positionTag: tag, start: start, end: end };
+            elections.push(newElection);
+            closeModal('election');
+            renderAll();
+            alert("Election added successfully!");
+        }
+
+        function handleCreateCandidate(event) {
+            event.preventDefault();
+            const name = document.getElementById('newCandName').value;
+            const pos = document.getElementById('newCandPos').value;
+
+            const newCandidate = { id: Date.now(), name: name, position: pos, votes: 0 };
+            candidates.push(newCandidate);
+            closeModal('candidate');
+            renderAll();
+            alert("Candidate assigned successfully!");
+        }
+
+        // Processing operation + Double check
+        function handleManualVote(event) {
+            event.preventDefault();
+            const electionId = parseInt(document.getElementById('voteModalElection').value);
+            const candId = parseInt(document.getElementById('voteModalCandidate').value);
+            
+            if (!candId) {
+                alert("Please select a candidate before submitting.");
+                return;
+            }
+
+            // Check if this specific candidate already received vote limit
+            const alreadyVoted = manualVotesLog.some(log => log.electionId === electionId && log.candidateId === candId);
+            
+            if (alreadyVoted) {
+                alert("Action Denied: You already voted for this candidate!");
+                return; 
+            }
+
+            candidates = candidates.map(c => {
+                if (c.id === candId) c.votes += 1;
+                return c;
+            });
+            
+            votesCast += 1;
+            
+            // Record target to keep ledger straight
+            manualVotesLog.push({ electionId: electionId, candidateId: candId });
+            
+            syncDB();
+            closeModal('vote');
+            renderAll();
+            alert("Vote recorded successfully and compiled into results!");
+        }
+
+        function renderAll() {
+            syncDB();
+            
+            document.getElementById('statActive').innerText = elections.filter(e => e.status === 'active').length;
+            document.getElementById('statVoters').innerText = voters.length;
+            document.getElementById('statCandidates').innerText = candidates.length;
+            document.getElementById('statVotes').innerText = votesCast;
+
+            // Dash Table
+            const dashT = document.getElementById('dashTableBody'); dashT.innerHTML = '';
+            elections.forEach(e => { dashT.innerHTML += `<tr><td>${e.name}</td><td><span class="status-badge ${e.status}">${e.status}</span></td><td>${e.start}</td><td>${e.end}</td></tr>`; });
+
+            // Election Table
+            const electT = document.getElementById('electionsTableBody'); electT.innerHTML = '';
+            elections.forEach(e => { 
+                electT.innerHTML += `
+                    <tr>
+                        <td>
+                            <a href="#" onclick="switchModule('candidates')" style="color: var(--blue); font-weight: 600; text-decoration: none;">${e.name}</a>
+                        </td>
+                        <td>
+                            <span class="status-badge ${e.status}" onclick="toggleElectionStatus(${e.id})" style="cursor:pointer;">${e.status}</span>
+                        </td>
+                        <td>${e.start}</td>
+                        <td>${e.end}</td>
+                        <td><button class="action-btn-red" onclick="deleteItem('elections', ${e.id})">Delete</button></td>
+                    </tr>`; 
+            });
+
+            // Candidates Table
+            const candT = document.getElementById('candidatesTableBody'); candT.innerHTML = '';
+            candidates.forEach(c => { candT.innerHTML += `<tr><td>${c.name}</td><td>${c.position}</td><td><button class="action-btn-red" onclick="deleteItem('candidates', ${c.id})">Delete</button></td></tr>`; });
+
+            // Voters Table
+            const voterT = document.getElementById('votersTableBody'); voterT.innerHTML = '';
+            voters.forEach(v => { voterT.innerHTML += `<tr><td>${v.name}</td><td>${v.dept}</td><td><span class="status-badge ${v.status}">${v.status}</span></td><td><button class="action-btn-red" onclick="deleteItem('voters', ${v.id})">Delete</button></td></tr>`; });
+
+            // Results Module 
+            const resultsDiv = document.getElementById('resultsContainer'); 
+            resultsDiv.innerHTML = '';
+            
+            const activeElections = elections.filter(e => e.status === 'active' || e.status === 'completed');
+
+            if (activeElections.length === 0) {
+                resultsDiv.innerHTML = "<p style='color:#666;'>No active or completed elections found to show results.</p>";
+                return;
+            }
+
+            activeElections.forEach(el => {
+                const elCand = candidates.filter(c => c.position === el.positionTag);
+                if(elCand.length === 0) return;
+
+                let totalVotes = elCand.reduce((sum, c) => sum + c.votes, 0);
+                let winner = elCand.reduce((prev, current) => (prev.votes > current.votes) ? prev : current);
+
+                resultsDiv.innerHTML += `<div class="box" style="margin-bottom: 20px;">
+                    <div class="box-header"><h3>${el.name} (Live Results)</h3></div>
+                    
+                    ${totalVotes > 0 ? `
+                    <div class="winner-box">
+                        <i class="fa-solid fa-trophy fa-lg"></i>
+                        <span>Current Leader: <strong>${winner.name}</strong> with ${winner.votes} votes!</span>
+                    </div>` : ''}
+
+                    <div style="display:flex; flex-direction:column; gap:15px;">
+                        ${elCand.map(c => {
+                            let share = totalVotes > 0 ? Math.round((c.votes / totalVotes) * 100) : 0;
+                            return `
+                                <div style="font-size:14px;">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                        <span><strong>${c.name}</strong></span>
+                                        <span>${share}% (${c.votes} Votes)</span>
+                                    </div>
+                                    <div class="candidate-progress-bar">
+                                        <div class="candidate-progress-fill" style="width:${share}%;"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>`;
+            });
+        }
+
+        // Student Portal
+        function renderStudentBooth() {
+            const booth = document.getElementById('votingBoothArea');
+            booth.innerHTML = '';
+            const activeEls = elections.filter(e => e.status === 'active');
+
+            if (activeEls.length === 0) {
+                booth.innerHTML = "<div class='box' style='width:550px; text-align:center;'><p style='color:#666;'>There are no active elections open for voting at this time.</p></div>";
+                return;
+            }
+
+            const navDiv = document.createElement('div');
+            navDiv.className = 'box';
+            navDiv.style.width = '550px';
+            navDiv.style.marginBottom = '20px';
+            navDiv.innerHTML = `<h4 style="margin-bottom:10px; color:#1e293b;">Active Ballots (Click to go to vote):</h4>`;
+            
+            activeEls.forEach(el => {
+                navDiv.innerHTML += `
+                    <div style="margin-bottom: 5px;">
+                        <a href="#ballot-election-${el.id}" style="color: var(--blue); font-weight: 600; text-decoration: none;">
+                            👉 Go to: ${el.name}
+                        </a>
+                    </div>`;
+            });
+            booth.appendChild(navDiv);
+
+            activeEls.forEach(el => {
+                const elCard = document.createElement('div');
+                elCard.className = 'election-card';
+                elCard.id = `ballot-election-${el.id}`;
+                
+                const matchCandidates = candidates.filter(c => c.position === el.positionTag);
+                
+                elCard.innerHTML = `
+                    <h4>${el.name}</h4>
+                    <p class="subtitle">Please select your preferred candidate and submit.</p>
+                `;
+
+                if (matchCandidates.length === 0) {
+                    elCard.innerHTML += `<p style='color:#999; font-size:14px; text-align:center;'>No candidates running for this spot yet.</p>`;
+                } else {
+                    const form = document.createElement('form');
+                    form.onsubmit = function(e) { handleVoteSubmission(e, el.id); };
+                    
+                    matchCandidates.forEach(c => {
+                        form.innerHTML += `
+                            <label class="candidate-row" for="cand-${c.id}">
+                                <input type="radio" name="selectedCandidate" id="cand-${c.id}" value="${c.id}" required>
+                                <span>${c.name}</span>
+                            </label>
+                        `;
+                    });
+
+                    form.innerHTML += `
+                        <button type="submit" class="submit-vote-btn">
+                            <i class="fa-solid fa-paper-plane"></i> Cast Vote
+                        </button>
+                    `;
+                    elCard.appendChild(form);
+                }
+                booth.appendChild(elCard);
+            });
+        }
+
+        function handleVoteSubmission(event, electionId) {
+            event.preventDefault();
+            const form = event.target;
+            const selectedCandId = parseInt(form.querySelector('input[name="selectedCandidate"]:checked').value);
+
+            candidates = candidates.map(c => {
+                if (c.id === selectedCandId) c.votes += 1;
+                return c;
+            });
+
+            votesCast += 1;
+
+            voters = voters.map(v => {
+                if(v.name.toLowerCase() === loggedInStudentName.toLowerCase()) v.status = 'voted';
+                return v;
+            });
+
+            syncDB();
+            alert("Success! Your vote has been recorded securely in the database.");
+            logout();
+        }
+
+        function deleteItem(type, id) {
+            if(type === 'elections') elections = elections.filter(e => e.id !== id);
+            if(type === 'candidates') candidates = candidates.filter(c => c.id !== id);
+            if(type === 'voters') voters = voters.filter(v => v.id !== id);
+            renderAll();
+        }
+
+        function toggleElectionStatus(id) {
+            elections = elections.map(e => {
+                if (e.id === id) e.status = (e.status === 'active') ? 'completed' : 'active';
+                return e;
+            });
+            renderAll();
+        }
+    </script>
+</body>
+</html>
